@@ -1,0 +1,7 @@
+/bin/*
+/.idea/*
+Makefile
+*.cbp
+*.cmake
+/CMakeFiles/*
+/CMakeCache.txt
