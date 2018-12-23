@@ -11,8 +11,9 @@ int main(int argc, char *argv[]) {
 //    test_top_k_search();
 //    test_top_search();
     praser_result *result = prase(argc, argv);
-    if(result->key_head == NULL){
-        printf("exit the query due to the last error....\n");
+    if(result == NULL || result->key_head == NULL){
+        usage();
+        printf("[error] exit the query due to the last error....\n");
         return -1;
     }
     result_chain *next_result = query_all_dataset_all_key(result->key_head);

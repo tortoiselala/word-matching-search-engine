@@ -535,6 +535,7 @@ void top_k_search(result_chain *result) {
 
 praser_result *prase(int argc, char *argv[]) {
     if (argc <= 1) {
+        printf("[error] require more arg...\n");
         return NULL;
     }
     praser_result *result = (praser_result *) malloc(sizeof(praser_result));
@@ -576,11 +577,28 @@ praser_result *prase(int argc, char *argv[]) {
     }
 
     if(result->key_head == NULL){
-        printf("command parser false, check your input\n");
+        printf("[error] command parser false, check your input\n");
         free(result);
         return NULL;
     }
     return result;
+}
+
+void usage(){
+    printf("Usage:\n");
+    printf("   1.query mode:\n");
+    printf("         -manual             :  \n");
+    printf("         -script             :  \n");
+    printf("   2.query method:\n");
+    printf("         -coreSearch         :   \n");
+    printf("         -exactSearch        :   \n");
+    printf("         -topSearch          :   \n");
+    printf("         -topKSearch         :   \n");
+    printf("   3.query keys or file name\n");
+    printf("\n\n");
+    printf("         example: -manual -coreSearch school station  \n");
+    printf("         example: -script -topSearch input.txt  \n");
+
 }
 
 void test_get_dataset() {

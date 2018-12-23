@@ -30,6 +30,8 @@ bool is_dataset_content_start(char *flag);
 
 praser_result *prase(int argc, char *argv[]);
 
+void usage();
+
 //memory manager
 
 //test function
