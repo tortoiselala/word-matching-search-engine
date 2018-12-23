@@ -28,6 +28,8 @@ void top_k_search(result_chain *data);
 
 bool is_dataset_content_start(char *flag);
 
+praser_result *prase(int argc, char *argv[]);
+
 //memory manager
 
 //test function

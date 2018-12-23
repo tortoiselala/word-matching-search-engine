@@ -9,6 +9,27 @@
 #define manual true
 #define script false
 
+enum{
+    coreSearch,
+    exactSearch,
+    topSearch,
+    topKSearch
+};
+
+static char *mode_key[] = {
+        "manual",
+        "script"
+};
+
+static char *method_key[]={
+        "coreSearch",
+        "exactSearch",
+        "topSearch",
+        "topKSearch"
+};
+
+#define inquiry_method_num 4
+
 #define datasetname_length 8
 
 #define datasetname_base 1
@@ -19,6 +40,7 @@
 //inquiry mode
 typedef bool mode;
 
+typedef int method;
 /*
  * keyword Unified interface for all inquiry set
  *      keyword_value    :  the value of key
@@ -83,6 +105,13 @@ typedef struct _top_search_result_node{
     result_dataset *s;
     struct _top_search_result_node *next;
 }top_search_result_node;
+
+typedef struct _command_praser{
+    mode inquiry_mode;
+    method inquiry_method;
+    keyword_head *key_head;
+
+}praser_result;
 
 #define CLION_WORKPLACE_PUBLIC_H
 

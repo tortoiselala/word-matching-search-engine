@@ -444,28 +444,28 @@ void top_search(result_chain *result) {
         top_search_result_node *result_tail = NULL;
         bool is_first = true;
         while (single_inquiry_result_it != NULL) {
-            if(single_inquiry_result_it->count > max_count){
+            if (single_inquiry_result_it->count > max_count) {
                 max_count = single_inquiry_result_it->count;
                 result_tail = result_head;
-                while(result_tail != NULL){
+                while (result_tail != NULL) {
                     top_search_result_node *tmp = result_tail;
                     result_tail = result_tail->next;
                     free(tmp);
                 }
-                result_head = (top_search_result_node *)malloc(sizeof(top_search_result_node));
+                result_head = (top_search_result_node *) malloc(sizeof(top_search_result_node));
                 result_head->next = NULL;
                 result_tail = result_head;
                 result_tail->s = single_inquiry_result_it;
                 is_first = false;
-            }else if(single_inquiry_result_it->count == max_count){
-                if(is_first){
-                    result_head = (top_search_result_node *)malloc(sizeof(top_search_result_node));
+            } else if (single_inquiry_result_it->count == max_count) {
+                if (is_first) {
+                    result_head = (top_search_result_node *) malloc(sizeof(top_search_result_node));
                     result_head->next = NULL;
                     result_tail = result_head;
                     result_tail->s = single_inquiry_result_it;
                     is_first = false;
-                }else{
-                    result_tail->next = (top_search_result_node *)malloc(sizeof(top_search_result_node));
+                } else {
+                    result_tail->next = (top_search_result_node *) malloc(sizeof(top_search_result_node));
                     result_tail->next->next = NULL;
                     result_tail->next->s = single_inquiry_result_it;
                     result_tail = result_tail->next;
@@ -474,7 +474,7 @@ void top_search(result_chain *result) {
             single_inquiry_result_it = single_inquiry_result_it->next;
         }
         result_tail = result_head;
-        while(result_tail != NULL){
+        while (result_tail != NULL) {
             printf("%s %s\n", tmp_result->query_name, result_tail->s->filename);
             top_search_result_node *tmp = result_tail;
             result_tail = result_tail->next;
@@ -531,6 +531,56 @@ void top_k_search(result_chain *result) {
         }
         tmp_result = tmp_result->next;
     }
+}
+
+praser_result *prase(int argc, char *argv[]) {
+    if (argc <= 1) {
+        return NULL;
+    }
+    praser_result *result = (praser_result *) malloc(sizeof(praser_result));
+    result->inquiry_mode = manual;
+    result->inquiry_method = coreSearch;
+    result->key_head = NULL;
+    for (int i = 1; i < argc; ++i) {
+        if (argv[i][0] == '-') {
+            if (!strcmp(argv[i] + 1, mode_key[0])) {
+                result->inquiry_mode = manual;
+            } else if (!strcmp(argv[i] + 1, mode_key[1])) {
+                result->inquiry_mode = script;
+            } else {
+                bool tag = true;
+                for (int j = 0; j < inquiry_method_num; ++j) {
+                    if (!strcmp(argv[i] + 1, method_key[j])) {
+                        result->inquiry_method = j;
+                        tag = false;
+                        break;
+                    }
+                }
+                if (tag) {
+                    printf("wrong command!\n");
+                }
+            }
+        } else {
+            if (result->inquiry_mode == script) {
+                result->key_head = get_query_chain_mode_script(argv[i]);
+                break;
+            } else {
+
+                result->key_head = get_query_chain_mode_manual(argc - i - 1, argv + i + 1);
+                if (result->key_head == NULL) {
+                    printf("can't find %s\n", argv[i]);
+                }
+                break;
+            }
+        }
+    }
+
+    if(result->key_head == NULL){
+        printf("command parser false, check your input\n");
+        free(result);
+        return NULL;
+    }
+    return result;
 }
 
 void test_get_dataset() {
@@ -639,6 +689,7 @@ void test_top_k_search() {
     result_chain *result = query_all_dataset_all_key(key);
     top_k_search(result);
 }
+
 
 
 
