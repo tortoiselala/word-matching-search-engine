@@ -704,7 +704,6 @@ void test_query_all_dataset_all_key() {
 
         result = result->next;
     }
-
     printf("...............................test function test_query_all_dataset_all_key end............\n");
 }
 
