@@ -19,14 +19,14 @@ int main(int argc, char *argv[]) {
     result_chain *next_result = query_all_dataset_all_key(result->key_head);
 
     if(result->inquiry_method == coreSearch){
-        core_search(next_result);
+        core_search(result->inquiry_mode,next_result);
     }else  if(result->inquiry_method == exactSearch){
-        exact_search(next_result);
+        exact_search(result->inquiry_mode,next_result);
     }
     else  if(result->inquiry_method == topSearch){
-        top_search(next_result);
+        top_search(result->inquiry_mode,next_result);
     }
     else  if(result->inquiry_method == topKSearch){
-        top_k_search(next_result);
+        top_k_search(result->inquiry_mode,next_result);
     }
 }

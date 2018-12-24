@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <library.h>
 
 
 char *get_dataset_name(int num) {
@@ -230,7 +229,7 @@ keyword_head *get_query_chain_mode_manual(int argc, char *argv[]) {
     char result_buffer[tmp_buffer_length * 100];
     memset(result_buffer, '\0', tmp_buffer_length * 100);
     int result_buffer_content_length = 0;
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 0; i < argc; ++i) {
         strcat(result_buffer, argv[i]);
         result_buffer_content_length += strlen(argv[i]);
         if (i != argc - 1) {
@@ -397,19 +396,24 @@ result_chain *query_all_dataset_all_key(keyword_head *key) {
     return result_head;
 }
 
-void core_search(result_chain *result) {
+void core_search(mode m, result_chain *result) {
     result_chain *tmp_result = result;
     while (tmp_result != NULL) {
         result_dataset *single_inquiry_result_it = tmp_result->first_data_result;
         while (single_inquiry_result_it != NULL) {
-            printf("%s %s\n", tmp_result->query_name, single_inquiry_result_it->filename);
+            if(m == manual){
+                printf("%s\n", single_inquiry_result_it->filename);
+            }else{
+                printf("%s %s\n", tmp_result->query_name, single_inquiry_result_it->filename);
+            }
+
             single_inquiry_result_it = single_inquiry_result_it->next;
         }
         tmp_result = tmp_result->next;
     }
 }
 
-void exact_search(result_chain *result) {
+void exact_search(mode m, result_chain *result) {
     result_chain *tmp_result = result;
     while (tmp_result != NULL) {
         result_dataset *single_inquiry_result_it = tmp_result->first_data_result;
@@ -424,7 +428,11 @@ void exact_search(result_chain *result) {
                 key = key->next;
             }
             if (is_all_exits) {
-                printf("%s %s\n", tmp_result->query_name, single_inquiry_result_it->filename);
+                if(m == manual){
+                    printf("%s\n", single_inquiry_result_it->filename);
+                }else{
+                    printf("%s %s\n", tmp_result->query_name, single_inquiry_result_it->filename);
+                }
             }
             single_inquiry_result_it = single_inquiry_result_it->next;
         }
@@ -432,7 +440,7 @@ void exact_search(result_chain *result) {
     }
 }
 
-void top_search(result_chain *result) {
+void top_search(mode m, result_chain *result) {
     result_chain *tmp_result = result;
 
     //a chain to store
@@ -475,7 +483,11 @@ void top_search(result_chain *result) {
         }
         result_tail = result_head;
         while (result_tail != NULL) {
-            printf("%s %s\n", tmp_result->query_name, result_tail->s->filename);
+            if(m == manual){
+                printf("%s\n", result_tail->s->filename);
+            }else{
+                printf("%s %s\n", tmp_result->query_name, result_tail->s->filename);
+            }
             top_search_result_node *tmp = result_tail;
             result_tail = result_tail->next;
             free(tmp);
@@ -484,7 +496,7 @@ void top_search(result_chain *result) {
     }
 }
 
-void top_k_search(result_chain *result) {
+void top_k_search(mode m, result_chain *result) {
     result_chain *tmp_result = result;
     while (tmp_result != NULL) {
         //result_1 is max
@@ -521,13 +533,25 @@ void top_k_search(result_chain *result) {
         }
 
         if (result_1 != NULL && count_1 > 0) {
-            printf("%s %s\n", tmp_result->query_name, result_1->filename);
+            if(m == manual){
+                printf("%s\n", result_1->filename);
+            }else{
+                printf("%s %s\n", tmp_result->query_name, result_1->filename);
+            }
         }
         if (result_2 != NULL && count_2 > 0) {
-            printf("%s %s\n", tmp_result->query_name, result_2->filename);
+            if(m == manual){
+                printf("%s\n", result_1->filename);
+            }else{
+                printf("%s %s\n", tmp_result->query_name, result_2->filename);
+            }
         }
         if (result_3 != NULL && count_3 > 0) {
-            printf("%s %s\n", tmp_result->query_name, result_3->filename);
+            if(m == manual){
+                printf("%s\n", result_1->filename);
+            }else{
+                printf("%s %s\n", tmp_result->query_name, result_3->filename);
+            }
         }
         tmp_result = tmp_result->next;
     }
@@ -567,7 +591,7 @@ praser_result *prase(int argc, char *argv[]) {
                 break;
             } else {
 
-                result->key_head = get_query_chain_mode_manual(argc - i - 1, argv + i + 1);
+                result->key_head = get_query_chain_mode_manual(argc - i, argv + i);
                 if (result->key_head == NULL) {
                     printf("can't find %s\n", argv[i]);
                 }
@@ -687,25 +711,25 @@ void test_query_all_dataset_all_key() {
 void test_core_search() {
     keyword_head *key = get_query_chain_mode_script("coreSearchQry.txt");
     result_chain *result = query_all_dataset_all_key(key);
-    core_search(result);
+    core_search(manual, result);
 }
 
 void test_exact_search() {
     keyword_head *key = get_query_chain_mode_script("exactSearchQry.txt");
     result_chain *result = query_all_dataset_all_key(key);
-    exact_search(result);
+    exact_search(manual, result);
 }
 
 void test_top_search() {
     keyword_head *key = get_query_chain_mode_script("topSearchQry.txt");
     result_chain *result = query_all_dataset_all_key(key);
-    top_search(result);
+    top_search(manual, result);
 }
 
 void test_top_k_search() {
     keyword_head *key = get_query_chain_mode_script("topKSearchQry.txt");
     result_chain *result = query_all_dataset_all_key(key);
-    top_k_search(result);
+    top_k_search(manual, result);
 }
 
 

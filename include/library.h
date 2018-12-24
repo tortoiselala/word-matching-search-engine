@@ -18,13 +18,13 @@ result_chain *query_all_dataset_single_key_chain(dataset *data, keyword_head *ke
 
 result_chain *query_all_dataset_all_key(keyword_head* key);
 
-void core_search(result_chain *data);
+void core_search(mode m, result_chain *data);
 
-void exact_search(result_chain *data);
+void exact_search(mode m, result_chain *data);
 
-void top_search(result_chain *data);
+void top_search(mode m, result_chain *data);
 
-void top_k_search(result_chain *data);
+void top_k_search(mode m, result_chain *data);
 
 bool is_dataset_content_start(char *flag);
 
